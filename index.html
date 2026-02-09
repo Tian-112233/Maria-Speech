@@ -1,889 +1,320 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maria's Speech - Final Version</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        body {
-            background-color: #f5f7fa;
-            font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maria Speech</title>
+  <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        /* 顶部按钮容器 */
-        .btn-container {
-            margin-bottom: 25px;
-            text-align: center;
-            position: sticky;
-            top: 20px;
-            z-index: 1000;
-        }
-        
-        .main-btn {
-            background-color: #d32f2f;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-        .main-btn:hover { transform: scale(1.05); background-color: #b71c1c; }
+    #content {
+      background-color: white;
+      width: 100%;
+      max-width: 950px;
+      padding: 60px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      box-sizing: border-box;
+      border-top: 10px solid #d32f2f;
+    }
 
-        /* A4纸张效果容器 */
-        #content-to-export {
-            background-color: white;
-            width: 100%;
-            max-width: 950px;
-            padding: 60px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            box-sizing: border-box;
-            border-top: 10px solid #d32f2f;
-        }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin: 0;
+      font-size: 28px;
+    }
 
-        h1 { text-align: center; color: #333; margin: 0; font-size: 28px; }
-        h2 { text-align: center; color: #888; font-size: 16px; font-weight: normal; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+    .sentence-group {
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed #e0e0e0;
+    }
 
-        /* 句子块样式 */
-        .sentence-group {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed #e0e0e0;
-        }
-        
-        .cn-text {
-            font-size: 24px; 
-            line-height: 2.5;
-            color: #2c3e50;
-            text-align: justify;
-            position: relative;
-        }
+    .cn-text {
+      font-size: 24px;
+      line-height: 2.3;
+      color: #2c3e50;
+      text-align: justify;
+    }
 
-        /* 播放按钮样式 - 演讲正文 */
-        .play-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background-color: #e0f2f1;
-            color: #009688;
-            border-radius: 50%;
-            margin-left: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            vertical-align: middle;
-            border: 1px solid #b2dfdb;
-            transition: all 0.2s;
-            user-select: none;
-        }
-        .play-icon:hover {
-            background-color: #009688;
-            color: white;
-            transform: scale(1.1);
-        }
+    .bg-text {
+      display: block;
+      font-size: 15px;
+      color: #546e7a;
+      font-style: italic;
+      margin-top: 10px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background-color: #eceff1;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
 
-        /* 播放按钮样式 - 词汇表 */
-        .vocab-play {
-            width: 24px;
-            height: 24px;
-            font-size: 12px;
-            margin-left: 5px;
-            background-color: #ffebee;
-            color: #d32f2f;
-            border-color: #ffcdd2;
-        }
-        .vocab-play:hover {
-            background-color: #d32f2f;
-            color: white;
-        }
+    ruby { ruby-position: over; margin: 0 2px; }
+    rt {
+      font-size: 13px;
+      color: #d32f2f;
+      font-weight: normal;
+      font-family: Arial, sans-serif;
+      transform: translateY(-4px);
+    }
 
-        .bg-text {
-            display: block;
-            font-size: 15px;
-            color: #546e7a;
-            font-style: italic;
-            margin-top: 10px;
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            background-color: #eceff1;
-            padding: 8px 12px;
-            border-radius: 6px;
-        }
+    .play-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background-color: #e0f2f1;
+      color: #009688;
+      border-radius: 50%;
+      margin-left: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      vertical-align: middle;
+      border: 1px solid #b2dfdb;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .play-icon:hover {
+      background-color: #009688;
+      color: white;
+      transform: scale(1.1);
+    }
 
-        /* 拼音标注样式 */
-        ruby { ruby-position: over; margin: 0 3px; }
-        rt { 
-            font-size: 13px; 
-            color: #d32f2f; 
-            font-weight: normal; 
-            font-family: Arial, sans-serif; 
-            transform: translateY(-4px); 
-        }
+    .vocab-container {
+      margin-top: 60px;
+      background-color: #fff;
+      border: 2px solid #eeeeee;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .vocab-title {
+      background-color: #d32f2f;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
 
-        /* 词汇表样式 */
-        .vocab-container {
-            margin-top: 60px;
-            background-color: #fff;
-            border: 2px solid #eeeeee;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .vocab-title {
-            background-color: #d32f2f;
-            color: white;
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { border-bottom: 1px solid #eee; padding: 12px 15px; vertical-align: middle; }
+    th { background-color: #ffebee; color: #b71c1c; font-weight: bold; text-align: left; }
+    tr:nth-child(even) { background-color: #fafafa; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 15px; }
-        th, td { border-bottom: 1px solid #eee; padding: 12px 15px; vertical-align: middle; }
-        th { background-color: #ffebee; color: #b71c1c; font-weight: bold; text-align: left; }
-        tr:nth-child(even) { background-color: #fafafa; }
-        
-        .v-word { font-size: 18px; font-weight: bold; color: #333; display: flex; align-items: center; }
-        .v-pinyin { font-size: 13px; color: #888; display: block; margin-top: 4px; font-family: Arial; }
+    .v-word { font-size: 18px; font-weight: bold; color: #333; display: flex; align-items: center; }
+    .v-pinyin { font-size: 13px; color: #888; display: block; margin-top: 4px; font-family: Arial; }
 
-        .footer { margin-top: 40px; text-align: center; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; }
-    </style>
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+  </style>
 </head>
 <body>
+  <div id="content">
+    <h1>Maria 自我介绍</h1>
 
-    <div class="btn-container">
-        <button class="main-btn" onclick="downloadImage()">📸 导出高清图片</button>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="尊敬 的 评委老师、 亲爱 的 朋友们：" data-py="zūnjìng de píngwěi lǎoshī qīn'ài de péngyoumen"></span><span class="play-icon" onclick="playAudio('01')">🔊</span></div>
+      <div class="bg-text">Уважаеми членове на журито, скъпи приятели:</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="大家 好！" data-py="dàjiā hǎo"></span><span class="play-icon" onclick="playAudio('02')">🔊</span></div>
+      <div class="bg-text">Здравейте!</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 叫 玛丽亚， 今年 十岁。" data-py="wǒ jiào mǎlìyà jīnnián shísuì"></span><span class="play-icon" onclick="playAudio('03')">🔊</span></div>
+      <div class="bg-text">Казвам се Мария и съм на 10 години.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 出生 在 首都 索非亚， 现在 生活 在 美丽 的 古城—— 大特尔诺沃。" data-py="wǒ chūshēng zài shǒudū suǒfēiyà xiànzài shēnghuó zài měilì de gǔchéng dàtè'ěrnuòwò"></span><span class="play-icon" onclick="playAudio('04')">🔊</span></div>
+      <div class="bg-text">Родена съм в столицата София, а сега живея в красивия старинен град Велико Търново.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 的 妈妈 是 一名 幼儿园 护士， 爸爸 是 一名 消防员。" data-py="wǒ de māma shì yìmíng yòu'éryuán hùshi bàba shì yìmíng xiāofángyuán"></span><span class="play-icon" onclick="playAudio('05')">🔊</span></div>
+      <div class="bg-text">Майка ми е медицинска сестра в детска градина, а баща ми е пожарникар.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="今天， 很 高兴 能 和 大家 分享 我 的 故事。" data-py="jīntiān hěn gāoxìng néng hé dàjiā fēnxiǎng wǒ de gùshi"></span><span class="play-icon" onclick="playAudio('06')">🔊</span></div>
+      <div class="bg-text">Днес съм много щастлива да споделя с вас моята история.</div>
     </div>
 
-    <div id="content-to-export">
-        <h1>我的世界：中文与冒险并肩前行</h1>
-        <h2>Моят свят: Китайският език и приключенията</h2>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>尊敬<rt>Zūnjìng</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>评委<rt>píngwěi</rt></ruby><ruby>老师<rt>lǎoshī</rt></ruby>、<ruby>亲爱<rt>qīn'ài</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>朋友们<rt>péngyoumen</rt></ruby>：
-                <span class="play-icon" onclick="playAudio('01')">🔊</span>
-            </div>
-            <div class="bg-text">Уважаеми жури, скъпи приятели:</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>大家<rt>Dàjiā</rt></ruby><ruby>好<rt>hǎo</rt></ruby>！
-                <span class="play-icon" onclick="playAudio('02')">🔊</span>
-            </div>
-            <div class="bg-text">Здравейте на всички!</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>叫<rt>jiào</rt></ruby><ruby>玛丽亚<rt>Mǎlìyà</rt></ruby>，<ruby>今年<rt>jīnnián</rt></ruby><ruby>10<rt>shí</rt></ruby><ruby>岁<rt>suì</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('03')">🔊</span>
-            </div>
-            <div class="bg-text">Казвам се Мария, на 10 години съм.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>出生<rt>chūshēng</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>首都<rt>shǒudū</rt></ruby><ruby>索非亚<rt>Suǒfēiyà</rt></ruby>，<ruby>现在<rt>xiànzài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>生活<rt>shēnghuó</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>美丽<rt>měilì</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>古城<rt>gǔchéng</rt></ruby>——<ruby>大特尔诺沃<rt>Dàtè'ěrnuòwò</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('04')">🔊</span>
-            </div>
-            <div class="bg-text">Родена съм в столицата София, а сега живея в красивия древен град – Велико Търново.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>妈妈<rt>māma</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>一名<rt>yì míng</rt></ruby><ruby>幼儿园<rt>yòu'éryuán</rt></ruby><ruby>护士<rt>hùshi</rt></ruby>，<ruby>爸爸<rt>bàba</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>一名<rt>yì míng</rt></ruby><ruby>消防员<rt>xiāofángyuán</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('05')">🔊</span>
-            </div>
-            <div class="bg-text">Майка ми е медицинска сестра в детска градина, а баща ми е пожарникар.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>今天<rt>Jīntiān</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>高兴<rt>gāoxìng</rt></ruby><ruby>能<rt>néng</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>大家<rt>dàjiā</rt></ruby><ruby>分享<rt>fēnxiǎng</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>世界<rt>shìjiè</rt></ruby>——<ruby>一个<rt>yí gè</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>与<rt>yǔ</rt></ruby><ruby>冒险<rt>màoxiǎn</rt></ruby><ruby>并肩<rt>bìngjiān</rt></ruby><ruby>前行<rt>qiánxíng</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>世界<rt>shìjiè</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('06')">🔊</span>
-            </div>
-            <div class="bg-text">Днес съм много щастлива да споделя с вас моя свят – един свят, в който китайският език и приключенията вървят рамо до рамо.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>从<rt>Cóng</rt></ruby><ruby>4<rt>sì</rt></ruby><ruby>岁<rt>suì</rt></ruby><ruby>开始<rt>kāishǐ</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>一直<rt>yì zhí</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>练习<rt>liànxí</rt></ruby><ruby>艺术体操<rt>yìshù tǐcāo</rt></ruby>，<ruby>还<rt>hái</rt></ruby><ruby>经常<rt>jīngcháng</rt></ruby><ruby>去<rt>qù</rt></ruby><ruby>全国<rt>quánguó</rt></ruby><ruby>各地<rt>gèdì</rt></ruby><ruby>参加<rt>cānjiā</rt></ruby><ruby>比赛<rt>bǐsài</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('07')">🔊</span>
-            </div>
-            <div class="bg-text">От 4-годишна възраст тренирам художествена гимнастика и често пътувам из страната за състезания.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>体操<rt>Tǐcāo</rt></ruby><ruby>教会<rt>jiāohuì</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>耐心<rt>nàixīn</rt></ruby>，<ruby>每一个<rt>měi yí gè</rt></ruby><ruby>新<rt>xīn</rt></ruby><ruby>动作<rt>dòngzuò</rt></ruby><ruby>刚<rt>gāng</rt></ruby><ruby>学<rt>xué</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>时候<rt>shíhou</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>难<rt>nán</rt></ruby>，<ruby>但<rt>dàn</rt></ruby><ruby>练<rt>liàn</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>无数次<rt>wúshù cì</rt></ruby><ruby>之后<rt>zhīhòu</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>做得<rt>zuò de</rt></ruby><ruby>越来越<rt>yuèláiyuè</rt></ruby><ruby>熟练<rt>shúliàn</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>也<rt>yě</rt></ruby><ruby>变得<rt>biànde</rt></ruby><ruby>越来越<rt>yuèláiyuè</rt></ruby><ruby>自信<rt>zìxìn</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('08')">🔊</span>
-            </div>
-            <div class="bg-text">Гимнастиката ме научи на търпение; всяко ново движение е трудно в началото, но след безброй повторения става все по-добро, а аз ставам все по-уверена.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>这<rt>Zhè</rt></ruby><ruby>六年<rt>liù nián</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>体操<rt>tǐcāo</rt></ruby><ruby>时光<rt>shíguāng</rt></ruby><ruby>里<rt>li</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>不仅<rt>bùjǐn</rt></ruby><ruby>学会<rt>xuéhuì</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>专注<rt>zhuānzhù</rt></ruby>、<ruby>认真<rt>rènzhēn</rt></ruby><ruby>听<rt>tīng</rt></ruby><ruby>老师<rt>lǎoshī</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>指令<rt>zhǐlìng</rt></ruby>，<ruby>还<rt>hái</rt></ruby><ruby>懂得<rt>dǒngde</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>犯错<rt>fàncuò</rt></ruby><ruby>时<rt>shí</rt></ruby><ruby>不能<rt>bùnéng</rt></ruby><ruby>轻易<rt>qīngyì</rt></ruby><ruby>放弃<rt>fàngqì</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('09')">🔊</span>
-            </div>
-            <div class="bg-text">През тези шест години гимнастика не само се научих да се концентрирам и да слушам внимателно инструкциите на треньора, но и разбрах, че не трябва лесно да се отказвам, когато греша.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>这些<rt>Zhèxiē</rt></ruby><ruby>品质<rt>pǐnzhì</rt></ruby><ruby>早<rt>zǎo</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>融入<rt>róngrù</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>生活<rt>shēnghuó</rt></ruby>，<ruby>在<rt>zài</rt></ruby><ruby>学习<rt>xuéxí</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>生活<rt>shēnghuó</rt></ruby><ruby>上<rt>shang</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>帮<rt>bāng</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>很多<rt>hěnduō</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('10')">🔊</span>
-            </div>
-            <div class="bg-text">Тези качества отдавна са част от живота ми и ми помагат много както в ученето, така и в ежедневието.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>通过<rt>Tōngguò</rt></ruby><ruby>努力<rt>nǔlì</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>不仅<rt>bùjǐn</rt></ruby><ruby>获得<rt>huòdé</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>团体<rt>tuántǐ</rt></ruby><ruby>奖杯<rt>jiǎngbēi</rt></ruby>，<ruby>还<rt>hái</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>国际<rt>guójì</rt></ruby><ruby>比赛<rt>bǐsài</rt></ruby><ruby>中<rt>zhōng</rt></ruby><ruby>赢得<rt>yíngdé</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>个人<rt>gèrén</rt></ruby><ruby>银牌<rt>yínpái</rt></ruby>！
-                <span class="play-icon" onclick="playAudio('11')">🔊</span>
-            </div>
-            <div class="bg-text">Благодарение на усилията си не само спечелих отборна купа, но и сребърен медал в индивидуалното класиране на международно състезание!</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>课余<rt>kèyú</rt></ruby><ruby>生活<rt>shēnghuó</rt></ruby><ruby>非常<rt>fēicháng</rt></ruby><ruby>丰富<rt>fēngfù</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>四季<rt>sìjì</rt></ruby><ruby>中<rt>zhōng</rt></ruby><ruby>寻找<rt>xúnzhǎo</rt></ruby><ruby>快乐<rt>kuàilè</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('12')">🔊</span>
-            </div>
-            <div class="bg-text">Свободното ми време е много разнообразно, обичам да търся щастието в четирите сезона.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>春天<rt>Chūntiān</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>骑<rt>qí</rt></ruby><ruby>着<rt>zhe</rt></ruby><ruby>自行车<rt>zìxíngchē</rt></ruby><ruby>穿过<rt>chuānguò</rt></ruby><ruby>公园<rt>gōngyuán</rt></ruby>，<ruby>看<rt>kàn</rt></ruby><ruby>路边<rt>lùbiān</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>花朵<rt>huāduǒ</rt></ruby><ruby>竞相<rt>jìngxiāng</rt></ruby><ruby>开放<rt>kāifàng</rt></ruby>，<ruby>感受<rt>gǎnshòu</rt></ruby><ruby>大自然<rt>dàzìrán</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>生机勃勃<rt>shēngjībóbó</rt></ruby>；
-                <span class="play-icon" onclick="playAudio('13')">🔊</span>
-            </div>
-            <div class="bg-text">През пролетта обичам да карам колело в парка, да гледам как цветята край пътя се надпреварват да цъфтят и да усещам жизнеността на природата;</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>夏天<rt>xiàtiān</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>海边<rt>hǎibiān</rt></ruby><ruby>收集<rt>shōují</rt></ruby><ruby>阳光<rt>yángguāng</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>能量<rt>néngliàng</rt></ruby>，<ruby>迎接<rt>yíngjiē</rt></ruby><ruby>清晨<rt>qīngchén</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>日出<rt>rìchū</rt></ruby>；
-                <span class="play-icon" onclick="playAudio('14')">🔊</span>
-            </div>
-            <div class="bg-text">През лятото обичам да събирам слънце и енергия на морския бряг и да посрещам изгрева сутрин;</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>秋天<rt>qiūtiān</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>森林<rt>sēnlín</rt></ruby><ruby>里<rt>li</rt></ruby><ruby>漫步<rt>mànbù</rt></ruby>，<ruby>累了<rt>lèile</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>好<rt>hǎo</rt></ruby><ruby>朋友们<rt>péngyoumen</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>阳光<rt>yángguāng</rt></ruby><ruby>明媚<rt>míngmèi</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>草地<rt>cǎodì</rt></ruby><ruby>上<rt>shang</rt></ruby><ruby>野餐<rt>yěcān</rt></ruby>；
-                <span class="play-icon" onclick="playAudio('15')">🔊</span>
-            </div>
-            <div class="bg-text">През есента обичам да се разхождам в гората, а когато се уморя, да си правя пикник с добри приятели на слънчевата поляна;</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>冬天<rt>dōngtiān</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>冰场<rt>bīngchǎng</rt></ruby><ruby>上<rt>shang</rt></ruby><ruby>寻找<rt>xúnzhǎo</rt></ruby><ruby>平衡<rt>pínghéng</rt></ruby>，<ruby>也<rt>yě</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>朋友们<rt>péngyoumen</rt></ruby><ruby>去<rt>qù</rt></ruby><ruby>山里<rt>shānlǐ</rt></ruby><ruby>滑<rt>huá</rt></ruby><ruby>雪橇<rt>xuěqiāo</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('16')">🔊</span>
-            </div>
-            <div class="bg-text">През зимата обичам да търся баланс на ледената пързалка, а също и да се пързалям с шейна в планината с приятели.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>正是<rt>Zhèngshì</rt></ruby><ruby>因为<rt>yīnwèi</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby><ruby>探索<rt>tànsuǒ</rt></ruby><ruby>这些<rt>zhèxiē</rt></ruby><ruby>美好<rt>měihǎo</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>事物<rt>shìwù</rt></ruby>，<ruby>所以<rt>suǒyǐ</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>缘分<rt>yuánfèn</rt></ruby><ruby>才<rt>cái</rt></ruby><ruby>悄悄<rt>qiāoqiāo</rt></ruby><ruby>开始<rt>kāishǐ</rt></ruby><ruby>了<rt>le</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('17')">🔊</span>
-            </div>
-            <div class="bg-text">Точно защото обичам да изследвам тези красиви неща, връзката ми с китайския език започна тихо.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>记得<rt>Jìdé</rt></ruby><ruby>那<rt>nà</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>家乡<rt>jiāxiāng</rt></ruby><ruby>举办<rt>jǔbàn</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>一次<rt>yí cì</rt></ruby><ruby>国际<rt>guójì</rt></ruby><ruby>民俗节<rt>mínsújié</rt></ruby><ruby>上<rt>shang</rt></ruby>，<ruby>中国<rt>Zhōngguó</rt></ruby><ruby>代表团<rt>dàibiǎotuán</rt></ruby><ruby>那<rt>nà</rt></ruby><ruby>色彩<rt>sècǎi</rt></ruby><ruby>鲜艳<rt>xiānyàn</rt></ruby>、<ruby>纹样<rt>wényàng</rt></ruby><ruby>精美<rt>jīngměi</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>民族<rt>mínzú</rt></ruby><ruby>服饰<rt>fúshì</rt></ruby><ruby>一下子<rt>yí xià zi</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>抓住<rt>zhuāzhù</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>眼球<rt>yǎnqiú</rt></ruby>，<ruby>让<rt>ràng</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>挪不开<rt>nuóbùkāi</rt></ruby><ruby>视线<rt>shìxiàn</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('18')">🔊</span>
-            </div>
-            <div class="bg-text">Спомням си, че на един международен фолклорен фестивал в родния ми град, пъстрите и красиво орнаментирани носии на китайската делегация веднага привлякоха погледа ми и не можех да откъсна очи от тях.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>就<rt>Jiù</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>那<rt>nà</rt></ruby><ruby>一刻<rt>yí kè</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>下定<rt>xiàdìng</rt></ruby><ruby>决心<rt>juéxīn</rt></ruby><ruby>一定<rt>yí dìng</rt></ruby><ruby>要<rt>yào</rt></ruby><ruby>学好<rt>xuéhǎo</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby>，<ruby>了解<rt>liǎojiě</rt></ruby><ruby>中国<rt>Zhōngguó</rt></ruby><ruby>文化<rt>wénhuà</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('19')">🔊</span>
-            </div>
-            <div class="bg-text">В този момент твърдо реших, че трябва да науча добре китайски и да опозная китайската култура.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>8<rt>Bā</rt></ruby><ruby>岁<rt>suì</rt></ruby><ruby>那年<rt>nànián</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>正式<rt>zhèngshì</rt></ruby><ruby>开始<rt>kāishǐ</rt></ruby><ruby>学习<rt>xuéxí</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('20')">🔊</span>
-            </div>
-            <div class="bg-text">Когато бях на 8 години, официално започнах да уча китайски.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>刚<rt>Gāng</rt></ruby><ruby>开始<rt>kāishǐ</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>发现<rt>fāxiàn</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>之前<rt>zhīqián</rt></ruby><ruby>学过<rt>xuéguò</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>所有<rt>suǒyǒu</rt></ruby><ruby>语言<rt>yǔyán</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>不一样<rt>bù yí yàng</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('21')">🔊</span>
-            </div>
-            <div class="bg-text">В началото открих, че китайският е различен от всички езици, които бях учила преди.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>汉字<rt>Hànzì</rt></ruby><ruby>虽然<rt>suīrán</rt></ruby><ruby>看起来<rt>kànqǐlai</rt></ruby><ruby>复杂<rt>fùzá</rt></ruby>，<ruby>但<rt>dàn</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>眼里<rt>yǎnlǐ</rt></ruby><ruby>特别<rt>tèbié</rt></ruby><ruby>美丽<rt>měilì</rt></ruby>、<ruby>整齐<rt>zhěngqí</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('22')">🔊</span>
-            </div>
-            <div class="bg-text">Въпреки че йероглифите изглеждат сложни, в моите очи те са особено красиви и подредени.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>后来<rt>Hòulái</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>惊喜<rt>jīngxǐ</rt></ruby><ruby>地<rt>de</rt></ruby><ruby>发现<rt>fāxiàn</rt></ruby>，<ruby>汉字<rt>Hànzì</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>体操<rt>tǐcāo</rt></ruby><ruby>动作<rt>dòngzuò</rt></ruby><ruby>居然<rt>jūrán</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>像<rt>xiàng</rt></ruby>——<ruby>每一笔<rt>měi yì bǐ</rt></ruby>、<ruby>每一划<rt>měi yí huà</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>固定<rt>gùdìng</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>顺序<rt>shùnxù</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>形状<rt>xíngzhuàng</rt></ruby>，<ruby>就<rt>jiù</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>体操<rt>tǐcāo</rt></ruby><ruby>动作<rt>dòngzuò</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>严谨<rt>yánjǐn</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>规则<rt>guīzé</rt></ruby><ruby>一样<rt>yí yàng</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('23')">🔊</span>
-            </div>
-            <div class="bg-text">По-късно с изненада открих, че йероглифите и гимнастическите движения си приличат много – всяка чертичка има фиксиран ред и форма, точно както гимнастическите движения имат строги правила.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>这种<rt>Zhèzhǒng</rt></ruby><ruby>挑战<rt>tiǎozhàn</rt></ruby><ruby>与<rt>yǔ</rt></ruby><ruby>美丽<rt>měilì</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>结合<rt>jiéhé</rt></ruby><ruby>让<rt>ràng</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>沉迷<rt>chénmí</rt></ruby><ruby>其中<rt>qízhōng</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>也<rt>yě</rt></ruby><ruby>因此<rt>yīncǐ</rt></ruby><ruby>爱上<rt>àishàng</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>书法<rt>shūfǎ</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('24')">🔊</span>
-            </div>
-            <div class="bg-text">Тази комбинация от предизвикателство и красота ме очарова и затова се влюбих в калиграфията.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>在<rt>Zài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>心里<rt>xīnlǐ</rt></ruby>，<ruby>中国<rt>Zhōngguó</rt></ruby><ruby>不只是<rt>bù zhǐ shì</rt></ruby><ruby>一个<rt>yí gè</rt></ruby><ruby>遥远<rt>yáoyuǎn</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>国家<rt>guójiā</rt></ruby>，<ruby>更是<rt>gèngshì</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>灵感<rt>línggǎn</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>源泉<rt>yuánquán</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('25')">🔊</span>
-            </div>
-            <div class="bg-text">В сърцето ми Китай не е просто далечна страна, а извор на моето вдъхновение.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>特别<rt>tèbié</rt></ruby><ruby>佩服<rt>pèifú</rt></ruby><ruby>中国<rt>Zhōngguó</rt></ruby><ruby>文化<rt>wénhuà</rt></ruby><ruby>里<rt>li</rt></ruby>“<ruby>坚守<rt>jiānshǒu</rt></ruby><ruby>传统<rt>chuántǒng</rt></ruby><ruby>又<rt>yòu</rt></ruby><ruby>勇于<rt>yǒngyú</rt></ruby><ruby>创新<rt>chuàngxīn</rt></ruby>”<ruby>的<rt>de</rt></ruby><ruby>精神<rt>jīngshén</rt></ruby>，<ruby>也<rt>yě</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>认同<rt>rèntóng</rt></ruby><ruby>中国人<rt>Zhōngguórén</rt></ruby><ruby>尊师重道<rt>zūnshī zhòngdào</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>价值观<rt>jiàzhíguān</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('26')">🔊</span>
-            </div>
-            <div class="bg-text">Особено се възхищавам на духа в китайската култура да „пазиш традициите, но и смело да създаваш новото“, и споделям ценностите на китайците за уважение към учителите.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>学习<rt>xuéxí</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>因为<rt>yīnwèi</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>相信<rt>xiāngxìn</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>就<rt>jiù</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>一座<rt>yí zuò</rt></ruby><ruby>桥梁<rt>qiáoliáng</rt></ruby>，<ruby>能<rt>néng</rt></ruby><ruby>带<rt>dài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>认识<rt>rènshi</rt></ruby><ruby>更多<rt>gèngduō</rt></ruby><ruby>新<rt>xīn</rt></ruby><ruby>朋友<rt>péngyou</rt></ruby>，<ruby>发现<rt>fāxiàn</rt></ruby><ruby>更多<rt>gèngduō</rt></ruby><ruby>未知<rt>wèizhī</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>可能<rt>kěnéng</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('27')">🔊</span>
-            </div>
-            <div class="bg-text">Уча китайски, защото вярвам, че той е като мост, който може да ме срещне с повече нови приятели и да ми разкрие повече непознати възможности.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>就<rt>Jiù</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>体操<rt>tǐcāo</rt></ruby><ruby>里<rt>li</rt></ruby><ruby>努力<rt>nǔlì</rt></ruby><ruby>追求<rt>zhuīqiú</rt></ruby><ruby>完美<rt>wánměi</rt></ruby><ruby>落地<rt>luòdì</rt></ruby><ruby>一样<rt>yí yàng</rt></ruby>，<ruby>学习<rt>xuéxí</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>时<rt>shí</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>也<rt>yě</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>努力<rt>nǔlì</rt></ruby><ruby>追求<rt>zhuīqiú</rt></ruby><ruby>进步<rt>jìnbù</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('28')">🔊</span>
-            </div>
-            <div class="bg-text">Точно както в гимнастиката се стремя към перфектното приземяване, така и когато уча китайски, се стремя към напредък.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>梦想<rt>mèngxiǎng</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>一天<rt>yì tiān</rt></ruby><ruby>能<rt>néng</rt></ruby><ruby>亲自<rt>qīnzì</rt></ruby><ruby>去<rt>qù</rt></ruby><ruby>中国<rt>Zhōngguó</rt></ruby><ruby>看一看<rt>kàn yi kàn</rt></ruby>！
-                <span class="play-icon" onclick="playAudio('29')">🔊</span>
-            </div>
-            <div class="bg-text">Мечтата ми е един ден лично да отида в Китай и да разгледам!</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>我<rt>Wǒ</rt></ruby><ruby>相信<rt>xiāngxìn</rt></ruby>，<ruby>只要<rt>zhǐyào</rt></ruby><ruby>坚持<rt>jiānchí</rt></ruby><ruby>下去<rt>xiàqù</rt></ruby>，<ruby>中文<rt>Zhōngwén</rt></ruby><ruby>这<rt>zhè</rt></ruby><ruby>把<rt>bǎ</rt></ruby>“<ruby>钥匙<rt>yàoshi</rt></ruby>”，<ruby>一定<rt>yí dìng</rt></ruby><ruby>会<rt>huì</rt></ruby><ruby>带<rt>dài</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>开启<rt>kāiqǐ</rt></ruby><ruby>更多<rt>gèngduō</rt></ruby><ruby>精彩<rt>jīngcǎi</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>冒险<rt>màoxiǎn</rt></ruby>。
-                <span class="play-icon" onclick="playAudio('30')">🔊</span>
-            </div>
-            <div class="bg-text">Вярвам, че ако продължавам да упорствам, китайският език – този „ключ“ – със сигурност ще ми отвори вратата към още вълнуващи приключения.</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>这<rt>Zhè</rt></ruby><ruby>就是<rt>jiùshì</rt></ruby><ruby>我<rt>wǒ</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><ruby>世界<rt>shìjiè</rt></ruby>——<ruby>一个<rt>yí gè</rt></ruby><ruby>中文<rt>Zhōngwén</rt></ruby><ruby>与<rt>yǔ</rt></ruby><ruby>冒险<rt>màoxiǎn</rt></ruby><ruby>并肩<rt>bìngjiān</rt></ruby><ruby>前行<rt>qiánxíng</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>世界<rt>shìjiè</rt></ruby>！
-                <span class="play-icon" onclick="playAudio('31')">🔊</span>
-            </div>
-            <div class="bg-text">Това е моят малък свят – свят, в който китайският език и приключенията вървят рамо до рамо!</div>
-        </div>
-
-        <div class="sentence-group">
-            <div class="cn-text">
-                <ruby>谢谢<rt>Xièxie</rt></ruby><ruby>大家<rt>dàjiā</rt></ruby>！<ruby>也<rt>Yě</rt></ruby><ruby>祝愿<rt>zhùyuàn</rt></ruby><ruby>所有<rt>suǒyǒu</rt></ruby><ruby>参赛<rt>cānsài</rt></ruby><ruby>选手<rt>xuǎnshǒu</rt></ruby><ruby>都<rt>dōu</rt></ruby><ruby>能<rt>néng</rt></ruby><ruby>取得<rt>qǔdé</rt></ruby><ruby>好<rt>hǎo</rt></ruby><ruby>成绩<rt>chéngjì</rt></ruby>！
-                <span class="play-icon" onclick="playAudio('32')">🔊</span>
-            </div>
-            <div class="bg-text">Благодаря на всички! Пожелавам успех на всички участници!</div>
-        </div>
-
-        <div class="vocab-container">
-            <div class="vocab-title">📚 重点词汇手册 (Vocabulary Handbook)</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th width="30%">中文 (Chinese)</th>
-                        <th width="30%">English</th>
-                        <th width="40%">Български</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <span class="v-word">朋友 <span class="play-icon vocab-play" onclick="playAudio('v01')">🔊</span></span>
-                            <span class="v-pinyin">péng you</span>
-                        </td>
-                        <td>Friend</td>
-                        <td>Приятел</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">评委 <span class="play-icon vocab-play" onclick="playAudio('v02')">🔊</span></span>
-                            <span class="v-pinyin">píng wěi</span>
-                        </td>
-                        <td>Judge (in a contest)</td>
-                        <td>Съдия / Жури</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">护士 <span class="play-icon vocab-play" onclick="playAudio('v03')">🔊</span></span>
-                            <span class="v-pinyin">hù shi</span>
-                        </td>
-                        <td>Nurse</td>
-                        <td>Медицинска сестра</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">消防员 <span class="play-icon vocab-play" onclick="playAudio('v04')">🔊</span></span>
-                            <span class="v-pinyin">xiāo fáng yuán</span>
-                        </td>
-                        <td>Firefighter</td>
-                        <td>Пожарникар</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">代表团 <span class="play-icon vocab-play" onclick="playAudio('v05')">🔊</span></span>
-                            <span class="v-pinyin">dài biǎo tuán</span>
-                        </td>
-                        <td>Delegation</td>
-                        <td>Делегация</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">选手 <span class="play-icon vocab-play" onclick="playAudio('v06')">🔊</span></span>
-                            <span class="v-pinyin">xuǎn shǒu</span>
-                        </td>
-                        <td>Contestant / Player</td>
-                        <td>Участник / Състезател</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>
-                            <span class="v-word">首都 <span class="play-icon vocab-play" onclick="playAudio('v07')">🔊</span></span>
-                            <span class="v-pinyin">shǒu dū</span>
-                        </td>
-                        <td>Capital city</td>
-                        <td>Столица</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">古城 <span class="play-icon vocab-play" onclick="playAudio('v08')">🔊</span></span>
-                            <span class="v-pinyin">gǔ chéng</span>
-                        </td>
-                        <td>Ancient city</td>
-                        <td>Древен град</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">公园 <span class="play-icon vocab-play" onclick="playAudio('v09')">🔊</span></span>
-                            <span class="v-pinyin">gōng yuán</span>
-                        </td>
-                        <td>Park</td>
-                        <td>Парк</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">海边 <span class="play-icon vocab-play" onclick="playAudio('v10')">🔊</span></span>
-                            <span class="v-pinyin">hǎi biān</span>
-                        </td>
-                        <td>Seaside / Beach</td>
-                        <td>Морски бряг</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">森林 <span class="play-icon vocab-play" onclick="playAudio('v11')">🔊</span></span>
-                            <span class="v-pinyin">sēn lín</span>
-                        </td>
-                        <td>Forest</td>
-                        <td>Гора</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">冰场 <span class="play-icon vocab-play" onclick="playAudio('v12')">🔊</span></span>
-                            <span class="v-pinyin">bīng chǎng</span>
-                        </td>
-                        <td>Ice rink</td>
-                        <td>Ледена пързалка</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">桥梁 <span class="play-icon vocab-play" onclick="playAudio('v13')">🔊</span></span>
-                            <span class="v-pinyin">qiáo liáng</span>
-                        </td>
-                        <td>Bridge</td>
-                        <td>Мост</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="v-word">艺术体操 <span class="play-icon vocab-play" onclick="playAudio('v14')">🔊</span></span>
-                            <span class="v-pinyin">yì shù tǐ cāo</span>
-                        </td>
-                        <td>Rhythmic gymnastics</td>
-                        <td>Художествена гимнастика</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">练习 <span class="play-icon vocab-play" onclick="playAudio('v15')">🔊</span></span>
-                            <span class="v-pinyin">liàn xí</span>
-                        </td>
-                        <td>To practice</td>
-                        <td>Упражнявам се / Тренирам</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">比赛 <span class="play-icon vocab-play" onclick="playAudio('v16')">🔊</span></span>
-                            <span class="v-pinyin">bǐ sài</span>
-                        </td>
-                        <td>Competition</td>
-                        <td>Състезание</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">骑自行车 <span class="play-icon vocab-play" onclick="playAudio('v17')">🔊</span></span>
-                            <span class="v-pinyin">qí zì xíng chē</span>
-                        </td>
-                        <td>Ride a bicycle</td>
-                        <td>Карам колело</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">漫步 <span class="play-icon vocab-play" onclick="playAudio('v18')">🔊</span></span>
-                            <span class="v-pinyin">màn bù</span>
-                        </td>
-                        <td>Stroll / Walk</td>
-                        <td>Разхождам се</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">野餐 <span class="play-icon vocab-play" onclick="playAudio('v19')">🔊</span></span>
-                            <span class="v-pinyin">yě cān</span>
-                        </td>
-                        <td>Picnic</td>
-                        <td>Пикник</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">滑雪橇 <span class="play-icon vocab-play" onclick="playAudio('v20')">🔊</span></span>
-                            <span class="v-pinyin">huá xuě qiāo</span>
-                        </td>
-                        <td>Sledding</td>
-                        <td>Пързаляне с шейна</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">探索 <span class="play-icon vocab-play" onclick="playAudio('v21')">🔊</span></span>
-                            <span class="v-pinyin">tàn suǒ</span>
-                        </td>
-                        <td>Explore</td>
-                        <td>Изследвам</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">下定决心 <span class="play-icon vocab-play" onclick="playAudio('v22')">🔊</span></span>
-                            <span class="v-pinyin">xià dìng jué xīn</span>
-                        </td>
-                        <td>Make up one's mind</td>
-                        <td>Вземам твърдо решение</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">坚持 <span class="play-icon vocab-play" onclick="playAudio('v23')">🔊</span></span>
-                            <span class="v-pinyin">jiān chí</span>
-                        </td>
-                        <td>Persist / Persevere</td>
-                        <td>Упорствам / Не се отказвам</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">开启 <span class="play-icon vocab-play" onclick="playAudio('v24')">🔊</span></span>
-                            <span class="v-pinyin">kāi qǐ</span>
-                        </td>
-                        <td>Open / Start</td>
-                        <td>Отварям / Започвам</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="v-word">奖杯 <span class="play-icon vocab-play" onclick="playAudio('v25')">🔊</span></span>
-                            <span class="v-pinyin">jiǎng bēi</span>
-                        </td>
-                        <td>Trophy</td>
-                        <td>Купа / Трофей</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">银牌 <span class="play-icon vocab-play" onclick="playAudio('v26')">🔊</span></span>
-                            <span class="v-pinyin">yín pái</span>
-                        </td>
-                        <td>Silver medal</td>
-                        <td>Сребърен медал</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">日出 <span class="play-icon vocab-play" onclick="playAudio('v27')">🔊</span></span>
-                            <span class="v-pinyin">rì chū</span>
-                        </td>
-                        <td>Sunrise</td>
-                        <td>Изгрев</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">民俗节 <span class="play-icon vocab-play" onclick="playAudio('v28')">🔊</span></span>
-                            <span class="v-pinyin">mín sú jié</span>
-                        </td>
-                        <td>Folklore Festival</td>
-                        <td>Фолклорен фестивал</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">服饰 <span class="play-icon vocab-play" onclick="playAudio('v29')">🔊</span></span>
-                            <span class="v-pinyin">fú shì</span>
-                        </td>
-                        <td>Costume / Clothing</td>
-                        <td>Облекло / Носия</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">汉字 <span class="play-icon vocab-play" onclick="playAudio('v30')">🔊</span></span>
-                            <span class="v-pinyin">Hàn zì</span>
-                        </td>
-                        <td>Chinese characters</td>
-                        <td>Китайски йероглифи</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">书法 <span class="play-icon vocab-play" onclick="playAudio('v31')">🔊</span></span>
-                            <span class="v-pinyin">shū fǎ</span>
-                        </td>
-                        <td>Calligraphy</td>
-                        <td>Калиграфия</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">钥匙 <span class="play-icon vocab-play" onclick="playAudio('v32')">🔊</span></span>
-                            <span class="v-pinyin">yào shi</span>
-                        </td>
-                        <td>Key</td>
-                        <td>Ключ</td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="v-word">耐心 <span class="play-icon vocab-play" onclick="playAudio('v33')">🔊</span></span>
-                            <span class="v-pinyin">nài xīn</span>
-                        </td>
-                        <td>Patience</td>
-                        <td>Търпение</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">熟练 <span class="play-icon vocab-play" onclick="playAudio('v34')">🔊</span></span>
-                            <span class="v-pinyin">shú liàn</span>
-                        </td>
-                        <td>Skilled</td>
-                        <td>Опитен / Умел</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">自信 <span class="play-icon vocab-play" onclick="playAudio('v35')">🔊</span></span>
-                            <span class="v-pinyin">zì xìn</span>
-                        </td>
-                        <td>Confident</td>
-                        <td>Уверен</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">生机勃勃 <span class="play-icon vocab-play" onclick="playAudio('v36')">🔊</span></span>
-                            <span class="v-pinyin">shēng jī bó bó</span>
-                        </td>
-                        <td>Full of vitality</td>
-                        <td>Пълен с живот</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">阳光明媚 <span class="play-icon vocab-play" onclick="playAudio('v37')">🔊</span></span>
-                            <span class="v-pinyin">yáng guāng míng mèi</span>
-                        </td>
-                        <td>Sunny and bright</td>
-                        <td>Слънчев</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">鲜艳 <span class="play-icon vocab-play" onclick="playAudio('v38')">🔊</span></span>
-                            <span class="v-pinyin">xiān yàn</span>
-                        </td>
-                        <td>Bright-colored</td>
-                        <td>Ярък / Пъстър</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">复杂 <span class="play-icon vocab-play" onclick="playAudio('v39')">🔊</span></span>
-                            <span class="v-pinyin">fù zá</span>
-                        </td>
-                        <td>Complex</td>
-                        <td>Сложен</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">整齐 <span class="play-icon vocab-play" onclick="playAudio('v40')">🔊</span></span>
-                            <span class="v-pinyin">zhěng qí</span>
-                        </td>
-                        <td>Neat / Tidy</td>
-                        <td>Подреден</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">严谨 <span class="play-icon vocab-play" onclick="playAudio('v41')">🔊</span></span>
-                            <span class="v-pinyin">yán jǐn</span>
-                        </td>
-                        <td>Rigorous / Strict</td>
-                        <td>Строг / Прецизен</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">遥远 <span class="play-icon vocab-play" onclick="playAudio('v42')">🔊</span></span>
-                            <span class="v-pinyin">yáo yuǎn</span>
-                        </td>
-                        <td>Distant</td>
-                        <td>Далечен</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">灵感 <span class="play-icon vocab-play" onclick="playAudio('v43')">🔊</span></span>
-                            <span class="v-pinyin">líng gǎn</span>
-                        </td>
-                        <td>Inspiration</td>
-                        <td>Вдъхновение</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">缘分 <span class="play-icon vocab-play" onclick="playAudio('v44')">🔊</span></span>
-                            <span class="v-pinyin">yuán fèn</span>
-                        </td>
-                        <td>Fate / Destiny</td>
-                        <td>Съдба / Връзка</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">尊师重道 <span class="play-icon vocab-play" onclick="playAudio('v45')">🔊</span></span>
-                            <span class="v-pinyin">zūn shī zhòng dào</span>
-                        </td>
-                        <td>Respect teachers</td>
-                        <td>Уважение към учителите</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>
-                            <span class="v-word">时候 <span class="play-icon vocab-play" onclick="playAudio('v46')">🔊</span></span>
-                            <span class="v-pinyin">shí hou</span>
-                        </td>
-                        <td>Time / When...</td>
-                        <td>Време / Когато...</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="v-word">挪不开视线 <span class="play-icon vocab-play" onclick="playAudio('v47')">🔊</span></span>
-                            <span class="v-pinyin">nuó bù kāi shì xiàn</span>
-                        </td>
-                        <td>Can't look away</td>
-                        <td>Не мога да откъсна поглед</td>
-                    </tr>
-                     <tr>
-                        <td>
-                            <span class="v-word">并肩前行 <span class="play-icon vocab-play" onclick="playAudio('v48')">🔊</span></span>
-                            <span class="v-pinyin">bìng jiān qián xíng</span>
-                        </td>
-                        <td>Move forward together</td>
-                        <td>Вървят рамо до рамо</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="footer">
-            Study Material for Maria's Speech Contest
-        </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="除了 家人， 我 还有 一个 最好 的 朋友， 那 就是—— 艺术体操。" data-py="chúle jiārén wǒ háiyǒu yíge zuìhǎo de péngyou nà jiùshì yìshùtǐcāo"></span><span class="play-icon" onclick="playAudio('07')">🔊</span></div>
+      <div class="bg-text">Освен семейството си имам и един най-добър приятел — художествената гимнастика.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="从 四岁 开始， 我 就 一直 练习 艺术体操， 经常 去 全国 各地 参加 比赛。" data-py="cóng sìsuì kāishǐ wǒ jiù yìzhí liànxí yìshùtǐcāo jīngcháng qù quánguó gèdì cānjiā bǐsài"></span><span class="play-icon" onclick="playAudio('08')">🔊</span></div>
+      <div class="bg-text">От четиригодишна възраст тренирам художествена гимнастика и често пътувам из страната за състезания.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="体操 教会 了 我 耐心： 每 一个 新 动作 刚 学 的时候 都 很 难， 会 摔倒， 会 受伤。 但是， 练习 了 无数 次 之后， 我 变得 越来越 自信。" data-py="tǐcāo jiāohuì le wǒ nàixīn měi yíge xīn dòngzuò gāng xué de shíhou dōu hěn nán huì shuāidǎo huì shòushāng dànshì liànxí le wúshù cì zhīhòu wǒ biànde yuèláiyuè zìxìn"></span><span class="play-icon" onclick="playAudio('09')">🔊</span></div>
+      <div class="bg-text">Гимнастиката ме научи на търпение: всяко ново движение е трудно в началото — падам и се наранявам, но след безброй упражнения ставам все по-уверена.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="这 六年 的 体操 时光 里， 我 学会 了 专注， 也 懂得 了 犯错 时 不能 轻易 放弃。 通过 努力， 我 不仅 获得 了 团体 奖杯， 还 在 国际 比赛 中 赢得 了 个人 银牌！" data-py="zhè liùnián de tǐcāo shíguāng lǐ wǒ xuéhuì le zhuānzhù yě dǒngde le fàncuò shí bùnéng qīngyì fàngqì tōngguò nǔlì wǒ bùjǐn huòdé le tuántǐ jiǎngbēi hái zài guójì bǐsài zhōng yíngdé le gèrén yínpái"></span><span class="play-icon" onclick="playAudio('10')">🔊</span></div>
+      <div class="bg-text">През тези шест години се научих да се концентрирам и да не се отказвам лесно, когато греша. С много труд спечелих отборна купа и индивидуален сребърен медал на международно състезание!</div>
     </div>
 
-    <script>
-        let currentAudio = null;
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="正是 因为 喜欢 挑战， 八岁 那年， 我 开始 学习 中文。" data-py="zhèngshì yīnwèi xǐhuān tiǎozhàn bāsuì nànián wǒ kāishǐ xuéxí zhōngwén"></span><span class="play-icon" onclick="playAudio('11')">🔊</span></div>
+      <div class="bg-text">Именно защото обичам предизвикателствата, на осем години започнах да уча китайски.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="刚开始， 我 觉得 汉字 非常 难。 但是， 我 惊喜地 发现， 汉字 和 体操 动作 竟然 很 像！" data-py="gāngkāishǐ wǒ juéde hànzì fēicháng nán dànshì wǒ jīngxǐde fāxiàn hànzì hé tǐcāo dòngzuò jìngrán hěn xiàng"></span><span class="play-icon" onclick="playAudio('12')">🔊</span></div>
+      <div class="bg-text">В началото йероглифите ми се струваха много трудни. Но с радост открих, че те приличат на движенията в гимнастиката!</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="汉字 的 每 一 笔、 每 一 划 都 有 固定 的 顺序 和 形状， 就 像 体操 动作 一样， 有 严谨 的 规则； 写好 一个 汉字， 就 像 完成 一套 完美 的 体操 动作， 让 我 特别 着迷。 我 也 因此 爱上 了 书法。" data-py="hànzì de měi yì bǐ měi yì huà dōu yǒu gùdìng de shùnxù hé xíngzhuàng jiù xiàng tǐcāo dòngzuò yíyàng yǒu yánjǐn de guīzé xiěhǎo yíge hànzì jiù xiàng wánchéng yítào wánměi de tǐcāo dòngzuò ràng wǒ tèbié zháomí wǒ yě yīncǐ àishàng le shūfǎ"></span><span class="play-icon" onclick="playAudio('13')">🔊</span></div>
+      <div class="bg-text">Всеки щрих има точен ред и форма — както и движенията в гимнастиката имат строги правила. Да напиша хубав йероглиф е като да изпълня перфектно съчетание, затова се влюбих и в калиграфията.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="学习 中文， 更 为 我 打开 了 一扇 通往 神奇 世界 的 大门。 我 越 学 越 觉得 中国 很 迷人。" data-py="xuéxí zhōngwén gèng wèi wǒ dǎkāi le yìshàn tōngwǎng shénqí shìjiè de dàmén wǒ yuè xué yuè juéde zhōngguó hěn mírén"></span><span class="play-icon" onclick="playAudio('14')">🔊</span></div>
+      <div class="bg-text">Ученето на китайски ми отвори врата към един вълшебен свят. Колкото повече уча, толкова повече ме привлича Китай.</div>
+    </div>
 
-        function playAudio(id) {
-            // 使用时间戳 ?t=... 来强制刷新缓存
-            const fileName = 'audio/' + id + '.m4a?t=' + new Date().getTime();
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="虽然 我 还 没 去过 中国， 但 我 发现 中国 和 我 的 家—— 大特尔诺沃 很 像： 我 的 家乡 有 古老 的 城堡， 而 中国 有 万里 的 长城。 看着 长城 的 照片， 我 总 觉得 它 像 一条 巨大 的 丝带， 把 中国 和 世界 连 在 了 一起。" data-py="suīrán wǒ hái méi qùguò zhōngguó dàn wǒ fāxiàn zhōngguó hé wǒ de jiā dàtè'ěrnuòwò hěn xiàng wǒ de jiāxiāng yǒu gǔlǎo de chéngbǎo ér zhōngguó yǒu wànlǐ de chángchéng kànzhe chángchéng de zhàopiàn wǒ zǒng juéde tā xiàng yìtiáo jùdà de sīdài bǎ zhōngguó hé shìjiè lián zài le yìqǐ"></span><span class="play-icon" onclick="playAudio('15')">🔊</span></div>
+      <div class="bg-text">Въпреки че още не съм била в Китай, откривам прилика между Китай и моя дом Велико Търново: ние имаме старинна крепост, а Китай има Великата стена. Като гледам снимки, тя ми прилича на огромна панделка, която свързва Китай със света.</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 也 很 喜欢 中国 的 春节： 红红 的 灯笼、 热闹 的 烟花， 还有 我 最 爱 的 “中国红”。 老师 还 给 我 讲过 “年” 的 故事—— 原来 年兽 最 怕 红纸 和 噼里啪啦 的 声音， 我 觉得 很 有趣。" data-py="wǒ yě hěn xǐhuān zhōngguó de chūnjié hónghóng de dēnglóng rènào de yānhuā háiyǒu wǒ zuì ài de zhōngguóhóng lǎoshī hái gěi wǒ jiǎngguò nián de gùshi yuánlái niánshòu zuì pà hóngzhǐ hé pīlǐpālā de shēngyīn wǒ juéde hěn yǒuqù"></span><span class="play-icon" onclick="playAudio('16')">🔊</span></div>
+      <div class="bg-text">Много харесвам Китайската Нова година: червени фенери, шумни фойерверки и любимото ми „китайско червено“. Учителят ми разказа и историята за чудовището „Нян“ — оказва се, че то се страхува от червена хартия и пукащи звуци. Това е и смело, и забавно!</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 还 想 亲口 尝 一串 冰糖葫芦， 听听 那 一声 “咔嚓” 的 脆响； 也 想 看看 圆滚滚 的 大熊猫， 和 它 比一比 到底 谁 更 可爱。" data-py="wǒ hái xiǎng qīnkǒu cháng yíchuàn bīngtánghúlu tīngting nà yìshēng kāchā de cuìxiǎng yě xiǎng kànkan yuángǔngǔn de dàxióngmāo hé tā bǐyìbǐ dàodǐ shéi gèng kě'ài"></span><span class="play-icon" onclick="playAudio('17')">🔊</span></div>
+      <div class="bg-text">Искам да опитам едно бинтанхулу и да чуя хрупкавото „крак“; искам и да видя пухкавата голяма панда и да сравним кой е по-сладък.</div>
+    </div>
 
-            // 如果当前有音频在播放，先停止
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 的 梦想 是 有 一天 去 中国， 坐 上 高铁 去 看看 长城， 尝 一串 冰糖葫芦， 然后 用 我 学到 的 中文 对 那里 的 朋友 说： 你好， 我们 交 个 朋友 吧！" data-py="wǒ de mèngxiǎng shì yǒu yìtiān qù zhōngguó zuò shàng gāotiě qù kànkan chángchéng cháng yíchuàn bīngtánghúlu ránhòu yòng wǒ xuédào de zhōngwén duì nàlǐ de péngyou shuō nǐhǎo wǒmen jiāo gè péngyou ba"></span><span class="play-icon" onclick="playAudio('18')">🔊</span></div>
+      <div class="bg-text">Мечтата ми е един ден да отида в Китай, да се кача на високоскоростния влак, да видя Великата стена, да опитам бинтанхулу и да кажа на приятелите там: „Здравей, нека станем приятели!“</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="我 相信， 中文 就 像 一把 金钥匙， 一定 能 带 我 开启 更多 精彩 的 冒险， 结交 世界 各地 的 朋友。" data-py="wǒ xiāngxìn zhōngwén jiù xiàng yìbǎ jīnyàoshi yídìng néng dài wǒ kāiqǐ gèngduō jīngcǎi de màoxiǎn jiéjiāo shìjiè gèdì de péngyou"></span><span class="play-icon" onclick="playAudio('19')">🔊</span></div>
+      <div class="bg-text">Вярвам, че китайският език е като златен ключ, който ще ми отвори още много прекрасни приключения и приятелства по света.</div>
+    </div>
 
-            currentAudio = new Audio(fileName);
-            
-            // 播放音频，并处理可能的错误
-            currentAudio.play().catch(error => {
-                // 移除时间戳后缀，以便在报错信息中显示干净的文件名
-                const cleanName = fileName.split('?')[0];
-                alert("未找到音频文件: " + cleanName + "\n请确保文件已上传到 audio 文件夹中，且后缀名为 .m4a");
-                console.log(error);
-            });
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="这 就是 我 的 故事！" data-py="zhè jiùshì wǒ de gùshi"></span><span class="play-icon" onclick="playAudio('20')">🔊</span></div>
+      <div class="bg-text">Това е моята история!</div>
+    </div>
+    <div class="sentence-group">
+      <div class="cn-text"><span class="rubyline" data-hz="谢谢 大家！ 也 祝愿 所有 参赛 选手 都 能 取得 好 成绩！" data-py="xièxie dàjiā yě zhùyuàn suǒyǒu cānsài xuǎnshǒu dōu néng qǔdé hǎo chéngjì"></span><span class="play-icon" onclick="playAudio('21')">🔊</span></div>
+      <div class="bg-text">Благодаря ви! Пожелавам успех на всички участници!</div>
+    </div>
+
+    <div class="vocab-container">
+      <div class="vocab-title">重点词汇 (Vocabulary)</div>
+      <table>
+        <thead>
+          <tr>
+            <th width="30%">中文</th>
+            <th width="20%">拼音</th>
+            <th width="25%">English</th>
+            <th width="25%">Български</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="v-word">艺术体操 <span class="play-icon" onclick="playAudio('v01')">🔊</span></span></td><td><span class="v-pinyin">yìshùtǐcāo</span></td><td>rhythmic gymnastics</td><td>Художествена гимнастика</td></tr>
+          <tr><td><span class="v-word">练习 <span class="play-icon" onclick="playAudio('v02')">🔊</span></span></td><td><span class="v-pinyin">liànxí</span></td><td>practice</td><td>Упражнявам се / Тренирам</td></tr>
+          <tr><td><span class="v-word">比赛 <span class="play-icon" onclick="playAudio('v03')">🔊</span></span></td><td><span class="v-pinyin">bǐsài</span></td><td>competition</td><td>Състезание</td></tr>
+          <tr><td><span class="v-word">耐心 <span class="play-icon" onclick="playAudio('v04')">🔊</span></span></td><td><span class="v-pinyin">nàixīn</span></td><td>patience</td><td>Търпение</td></tr>
+          <tr><td><span class="v-word">专注 <span class="play-icon" onclick="playAudio('v05')">🔊</span></span></td><td><span class="v-pinyin">zhuānzhù</span></td><td>focus</td><td>Концентрация</td></tr>
+          <tr><td><span class="v-word">放弃 <span class="play-icon" onclick="playAudio('v06')">🔊</span></span></td><td><span class="v-pinyin">fàngqì</span></td><td>give up</td><td>Отказвам се</td></tr>
+          <tr><td><span class="v-word">奖杯 <span class="play-icon" onclick="playAudio('v07')">🔊</span></span></td><td><span class="v-pinyin">jiǎngbēi</span></td><td>trophy</td><td>Купа / Трофей</td></tr>
+          <tr><td><span class="v-word">银牌 <span class="play-icon" onclick="playAudio('v08')">🔊</span></span></td><td><span class="v-pinyin">yínpái</span></td><td>silver medal</td><td>Сребърен медал</td></tr>
+          <tr><td><span class="v-word">挑战 <span class="play-icon" onclick="playAudio('v09')">🔊</span></span></td><td><span class="v-pinyin">tiǎozhàn</span></td><td>challenge</td><td>Предизвикателство</td></tr>
+          <tr><td><span class="v-word">汉字 <span class="play-icon" onclick="playAudio('v10')">🔊</span></span></td><td><span class="v-pinyin">hànzì</span></td><td>Chinese character</td><td>Китайски йероглифи</td></tr>
+          <tr><td><span class="v-word">书法 <span class="play-icon" onclick="playAudio('v11')">🔊</span></span></td><td><span class="v-pinyin">shūfǎ</span></td><td>calligraphy</td><td>Калиграфия</td></tr>
+          <tr><td><span class="v-word">长城 <span class="play-icon" onclick="playAudio('v12')">🔊</span></span></td><td><span class="v-pinyin">chángchéng</span></td><td>Great Wall</td><td>Великата китайска стена</td></tr>
+          <tr><td><span class="v-word">春节 <span class="play-icon" onclick="playAudio('v13')">🔊</span></span></td><td><span class="v-pinyin">chūnjié</span></td><td>Spring Festival</td><td>Китайската Нова година</td></tr>
+          <tr><td><span class="v-word">灯笼 <span class="play-icon" onclick="playAudio('v14')">🔊</span></span></td><td><span class="v-pinyin">dēnglóng</span></td><td>lantern</td><td>Фенер / Лампион</td></tr>
+          <tr><td><span class="v-word">冰糖葫芦 <span class="play-icon" onclick="playAudio('v15')">🔊</span></span></td><td><span class="v-pinyin">bīngtánghúlu</span></td><td>candied hawthorn</td><td>Захаросан глог на клечка</td></tr>
+          <tr><td><span class="v-word">大熊猫 <span class="play-icon" onclick="playAudio('v16')">🔊</span></span></td><td><span class="v-pinyin">dàxióngmāo</span></td><td>giant panda</td><td>Голяма панда</td></tr>
+          <tr><td><span class="v-word">高铁 <span class="play-icon" onclick="playAudio('v17')">🔊</span></span></td><td><span class="v-pinyin">gāotiě</span></td><td>high-speed rail</td><td>Високоскоростен влак</td></tr>
+          <tr><td><span class="v-word">金钥匙 <span class="play-icon" onclick="playAudio('v18')">🔊</span></span></td><td><span class="v-pinyin">jīnyàoshi</span></td><td>golden key</td><td>Златен ключ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">Audio IDs: 01–21 (speech), v01–v18 (vocab).</div>
+  </div>
+
+  <script>
+    function renderRubyLine(el) {
+      // Word-level ruby: put spaces in data-hz to mark word boundaries,
+      // and put matching word-level pinyin in data-py (separated by spaces).
+      const hzRaw = (el.getAttribute('data-hz') || '').trim();
+      const hzTokens = hzRaw.split(/\s+/).filter(Boolean);
+
+      const pyRaw = (el.getAttribute('data-py') || '').trim();
+      const pyTokens = pyRaw ? pyRaw.split(/\s+/).filter(Boolean) : [];
+
+      let i = 0;
+      const hasCjk = (s) => /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF0-9]/.test(s);
+      const cap1 = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+
+      // Proper nouns in this script (keep pinyin lowercase elsewhere).
+      // Add more items here if you introduce additional names/places.
+      const properPinyin = new Set([
+        "mǎlìyà",        // 玛丽亚
+        "suǒfēiyà",      // 索非亚
+        "dàtè'ěrnuòwò",  // 大特尔诺沃
+        "zhōngguó",      // 中国
+        "chángchéng",    // 长城
+        "chūnjié",       // 春节
+        "nián"           // “年”(怪兽名)
+      ]);
+
+      let html = '';
+      for (const token of hzTokens) {
+        if (hasCjk(token)) {
+          const pyLower = (pyTokens[i] || '').toLowerCase();
+          const shouldCap = (i === 0 && pyLower) || properPinyin.has(pyLower);
+          const py = shouldCap ? cap1(pyLower) : pyLower;
+          i += 1;
+          html += `<ruby>${token}<rt>${py}</rt></ruby>`;
+        } else {
+          html += token;
         }
+      }
+      el.innerHTML = html;
+    }
 
-        function downloadImage() {
-            const element = document.getElementById("content-to-export");
-            const btn = document.querySelector(".main-btn");
-            const originalText = btn.innerText;
-            
-            btn.innerText = "⏳ 正在生成... (Processing...)";
-            window.scrollTo(0,0);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.rubyline').forEach(renderRubyLine);
+    });
 
-            html2canvas(element, {
-                scale: 2, 
-                useCORS: true, 
-                backgroundColor: "#ffffff",
-                windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight + 150 
-            }).then(canvas => {
-                const link = document.createElement("a");
-                link.download = 'Maria_Speech_Handbook.png';
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-                btn.innerText = originalText;
-            }).catch(err => {
-                console.error(err);
-                alert("导出失败，请尝试手动截图。");
-                btn.innerText = originalText;
-            });
-        }
-    </script>
-
+    let currentAudio = null;
+    function playAudio(id) {
+      // expects audio files in ./audio/<id>.m4a
+      const fileName = 'audio/' + id + '.m4a?t=' + new Date().getTime();
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      currentAudio = new Audio(fileName);
+      currentAudio.play().catch(() => {
+        const cleanName = fileName.split('?')[0];
+        alert('未找到音频文件: ' + cleanName);
+      });
+    }
+  </script>
 </body>
 </html>
