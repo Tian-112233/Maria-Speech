@@ -67,6 +67,10 @@
       font-family: Arial, sans-serif;
       transform: translateY(-4px);
     }
+    /* Ensure ruby annotations display across mobile browsers */
+    ruby, rt { ruby-position: over; }
+    rt { display: ruby-text; }
+    
 
     .play-icon {
       display: inline-flex;
@@ -100,8 +104,31 @@
     }
 
     /* Mobile: allow horizontal scroll for the vocabulary table */
-    .vocab-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .vocab-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      display: block;
+      max-width: 100%;
+      border-top: 1px solid #eee;
+    }
     .vocab-table-wrap table { min-width: 720px; }
+
+    /* Make it obvious on mobile that the table can scroll */
+    @media (max-width: 720px) {
+      .vocab-table-wrap { padding-bottom: 6px; }
+      .vocab-container::after {
+        content: "左右滑动查看表格 →";
+        display: block;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #607d8b;
+        background: #f6f8fa;
+        border-top: 1px solid #eee;
+        text-align: right;
+      }
+    }
     .vocab-title {
       background-color: #d32f2f;
       color: white;
@@ -134,44 +161,200 @@
     <h1>Maria 自我介绍</h1>
 
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="尊敬 的 评委老师、 亲爱 的 朋友们：" data-py="zūnjìng de píngwěi lǎoshī qīn'ài de péngyoumen"></span><span class="play-icon" onclick="playAudio('01')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>尊敬<rt>Zūn jìng</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>评委老师<rt>píng wěi lǎo shī</rt></ruby>、
+        <ruby>亲爱<rt>qīn ài</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>朋友们<rt>péng you men</rt></ruby>：
+        <span class="play-icon" onclick="playAudio('01')">🔊</span>
+      </div>
       <div class="bg-text">Уважаеми членове на журито, скъпи приятели:</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="大家 好！" data-py="dàjiā hǎo"></span><span class="play-icon" onclick="playAudio('02')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>大家<rt>Dà jiā</rt></ruby>
+        <ruby>好<rt>hǎo</rt></ruby>！
+        <span class="play-icon" onclick="playAudio('02')">🔊</span>
+      </div>
       <div class="bg-text">Здравейте!</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="我 叫 玛丽亚， 今年 十岁。" data-py="wǒ jiào mǎlìyà jīnnián shísuì"></span><span class="play-icon" onclick="playAudio('03')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>我<rt>Wǒ</rt></ruby>
+        <ruby>叫<rt>jiào</rt></ruby>
+        <ruby>玛丽亚<rt>Mǎ lì yà</rt></ruby>，
+        <ruby>今年<rt>jīn nián</rt></ruby>
+        <ruby>十岁<rt>shí suì</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('03')">🔊</span>
+      </div>
       <div class="bg-text">Казвам се Мария и съм на 10 години.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="我 出生 在 首都 索非亚， 现在 生活 在 美丽 的 古城—— 大特尔诺沃。" data-py="wǒ chūshēng zài shǒudū suǒfēiyà xiànzài shēnghuó zài měilì de gǔchéng dàtè'ěrnuòwò"></span><span class="play-icon" onclick="playAudio('04')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>我<rt>Wǒ</rt></ruby>
+        <ruby>出生<rt>chū shēng</rt></ruby>
+        <ruby>在<rt>zài</rt></ruby>
+        <ruby>首都<rt>shǒu dū</rt></ruby>
+        <ruby>索非亚<rt>Suǒ fēi yà</rt></ruby>，
+        <ruby>现在<rt>xiàn zài</rt></ruby>
+        <ruby>生活<rt>shēng huó</rt></ruby>
+        <ruby>在<rt>zài</rt></ruby>
+        <ruby>美丽<rt>měi lì</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>古城<rt>gǔ chéng</rt></ruby>——
+        <ruby>大特尔诺沃<rt>Dà tè ěr nuò wò</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('04')">🔊</span>
+      </div>
       <div class="bg-text">Родена съм в столицата София, а сега живея в красивия старинен град Велико Търново.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="我 的 妈妈 是 一名 幼儿园 护士， 爸爸 是 一名 消防员。" data-py="wǒ de māma shì yìmíng yòu'éryuán hùshi bàba shì yìmíng xiāofángyuán"></span><span class="play-icon" onclick="playAudio('05')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>我<rt>Wǒ</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>妈妈<rt>mā ma</rt></ruby>
+        <ruby>是<rt>shì</rt></ruby>
+        <ruby>一名<rt>yì míng</rt></ruby>
+        <ruby>幼儿园<rt>yòu ér yuán</rt></ruby>
+        <ruby>护士<rt>hù shi</rt></ruby>，
+        <ruby>爸爸<rt>bà ba</rt></ruby>
+        <ruby>是<rt>shì</rt></ruby>
+        <ruby>一名<rt>yì míng</rt></ruby>
+        <ruby>消防员<rt>xiāo fáng yuán</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('05')">🔊</span>
+      </div>
       <div class="bg-text">Майка ми е медицинска сестра в детска градина, а баща ми е пожарникар.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="今天， 很 高兴 能 和 大家 分享 我 的 故事。" data-py="jīntiān hěn gāoxìng néng hé dàjiā fēnxiǎng wǒ de gùshi"></span><span class="play-icon" onclick="playAudio('06')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>今天<rt>Jīn tiān</rt></ruby>，
+        <ruby>很<rt>hěn</rt></ruby>
+        <ruby>高兴<rt>gāo xìng</rt></ruby>
+        <ruby>能<rt>néng</rt></ruby>
+        <ruby>和<rt>hé</rt></ruby>
+        <ruby>大家<rt>dà jiā</rt></ruby>
+        <ruby>分享<rt>fēn xiǎng</rt></ruby>
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>故事<rt>gù shi</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('06')">🔊</span>
+      </div>
       <div class="bg-text">Днес съм много щастлива да споделя с вас моята история.</div>
     </div>
 
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="除了 家人， 我 还有 一个 最好 的 朋友， 那 就是—— 艺术体操。" data-py="chúle jiārén wǒ háiyǒu yíge zuìhǎo de péngyou nà jiùshì yìshùtǐcāo"></span><span class="play-icon" onclick="playAudio('07')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>除了<rt>Chú le</rt></ruby>
+        <ruby>家人<rt>jiā rén</rt></ruby>，
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>还有<rt>hái yǒu</rt></ruby>
+        <ruby>一个<rt>yí gè</rt></ruby>
+        <ruby>最好<rt>zuì hǎo</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>朋友<rt>péng you</rt></ruby>，
+        <ruby>那<rt>nà</rt></ruby>
+        <ruby>就是<rt>jiù shì</rt></ruby>——
+        <ruby>艺术体操<rt>yì shù tǐ cāo</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('07')">🔊</span>
+      </div>
       <div class="bg-text">Освен семейството си имам и един най-добър приятел — художествената гимнастика.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="从 四岁 开始， 我 就 一直 练习 艺术体操， 经常 去 全国 各地 参加 比赛。" data-py="cóng sìsuì kāishǐ wǒ jiù yìzhí liànxí yìshùtǐcāo jīngcháng qù quánguó gèdì cānjiā bǐsài"></span><span class="play-icon" onclick="playAudio('08')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>从<rt>Cóng</rt></ruby>
+        <ruby>四岁<rt>sì suì</rt></ruby>
+        <ruby>开始<rt>kāi shǐ</rt></ruby>，
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>就<rt>jiù</rt></ruby>
+        <ruby>一直<rt>yì zhí</rt></ruby>
+        <ruby>练习<rt>liàn xí</rt></ruby>
+        <ruby>艺术体操<rt>yì shù tǐ cāo</rt></ruby>，
+        <ruby>经常<rt>jīng cháng</rt></ruby>
+        <ruby>去<rt>qù</rt></ruby>
+        <ruby>全国<rt>quán guó</rt></ruby>
+        <ruby>各地<rt>gè dì</rt></ruby>
+        <ruby>参加<rt>cān jiā</rt></ruby>
+        <ruby>比赛<rt>bǐ sài</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('08')">🔊</span>
+      </div>
       <div class="bg-text">От четиригодишна възраст тренирам художествена гимнастика и често пътувам из страната за състезания.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="体操 教会 了 我 耐心： 每 一个 新 动作 刚 学 的时候 都 很 难， 会 摔倒， 会 受伤。 但是， 练习 了 无数 次 之后， 我 变得 越来越 自信。" data-py="tǐcāo jiāohuì le wǒ nàixīn měi yíge xīn dòngzuò gāng xué de shíhou dōu hěn nán huì shuāidǎo huì shòushāng dànshì liànxí le wúshù cì zhīhòu wǒ biànde yuèláiyuè zìxìn"></span><span class="play-icon" onclick="playAudio('09')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>体操<rt>Tǐ cāo</rt></ruby>
+        <ruby>教会<rt>jiāo huì</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>耐心<rt>nài xīn</rt></ruby>：
+        <ruby>每<rt>měi</rt></ruby>
+        <ruby>一个<rt>yí gè</rt></ruby>
+        <ruby>新<rt>xīn</rt></ruby>
+        <ruby>动作<rt>dòng zuò</rt></ruby>
+        <ruby>刚<rt>gāng</rt></ruby>
+        <ruby>学<rt>xué</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>时候<rt>shí hou</rt></ruby>
+        <ruby>都<rt>dōu</rt></ruby>
+        <ruby>很<rt>hěn</rt></ruby>
+        <ruby>难<rt>nán</rt></ruby>，
+        <ruby>会<rt>huì</rt></ruby>
+        <ruby>摔倒<rt>shuāi dǎo</rt></ruby>，
+        <ruby>会<rt>huì</rt></ruby>
+        <ruby>受伤<rt>shòu shāng</rt></ruby>。
+        <ruby>但是<rt>Dàn shì</rt></ruby>，
+        <ruby>练习<rt>liàn xí</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>无数<rt>wú shù</rt></ruby>
+        <ruby>次<rt>cì</rt></ruby>
+        <ruby>之后<rt>zhī hòu</rt></ruby>，
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>变得<rt>biàn de</rt></ruby>
+        <ruby>越来越<rt>yuè lái yuè</rt></ruby>
+        <ruby>自信<rt>zì xìn</rt></ruby>。
+        <span class="play-icon" onclick="playAudio('09')">🔊</span>
+      </div>
       <div class="bg-text">Гимнастиката ме научи на търпение: всяко ново движение е трудно в началото — падам и се наранявам, но след безброй упражнения ставам все по-уверена.</div>
     </div>
     <div class="sentence-group">
-      <div class="cn-text"><span class="rubyline" data-hz="这 六年 的 体操 时光 里， 我 学会 了 专注， 也 懂得 了 犯错 时 不能 轻易 放弃。 通过 努力， 我 不仅 获得 了 团体 奖杯， 还 在 国际 比赛 中 赢得 了 个人 银牌！" data-py="zhè liùnián de tǐcāo shíguāng lǐ wǒ xuéhuì le zhuānzhù yě dǒngde le fàncuò shí bùnéng qīngyì fàngqì tōngguò nǔlì wǒ bùjǐn huòdé le tuántǐ jiǎngbēi hái zài guójì bǐsài zhōng yíngdé le gèrén yínpái"></span><span class="play-icon" onclick="playAudio('10')">🔊</span></div>
+      <div class="cn-text">
+        <ruby>这<rt>Zhè</rt></ruby>
+        <ruby>六年<rt>liù nián</rt></ruby>
+        <ruby>的<rt>de</rt></ruby>
+        <ruby>体操<rt>tǐ cāo</rt></ruby>
+        <ruby>时光<rt>shí guāng</rt></ruby>
+        <ruby>里<rt>lǐ</rt></ruby>，
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>学会<rt>xué huì</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>专注<rt>zhuān zhù</rt></ruby>，
+        <ruby>也<rt>yě</rt></ruby>
+        <ruby>懂得<rt>dǒng de</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>犯错<rt>fàn cuò</rt></ruby>
+        <ruby>时<rt>shí</rt></ruby>
+        <ruby>不能<rt>bù néng</rt></ruby>
+        <ruby>轻易<rt>qīng yì</rt></ruby>
+        <ruby>放弃<rt>fàng qì</rt></ruby>。
+        <ruby>通过<rt>Tōng guò</rt></ruby>
+        <ruby>努力<rt>nǔ lì</rt></ruby>，
+        <ruby>我<rt>wǒ</rt></ruby>
+        <ruby>不仅<rt>bù jǐn</rt></ruby>
+        <ruby>获得<rt>huò dé</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>团体<rt>tuán tǐ</rt></ruby>
+        <ruby>奖杯<rt>jiǎng bēi</rt></ruby>，
+        <ruby>还<rt>hái</rt></ruby>
+        <ruby>在<rt>zài</rt></ruby>
+        <ruby>国际<rt>guó jì</rt></ruby>
+        <ruby>比赛<rt>bǐ sài</rt></ruby>
+        <ruby>中<rt>zhōng</rt></ruby>
+        <ruby>赢得<rt>yíng dé</rt></ruby>
+        <ruby>了<rt>le</rt></ruby>
+        <ruby>个人<rt>gè rén</rt></ruby>
+        <ruby>银牌<rt>yín pái</rt></ruby>！
+        <span class="play-icon" onclick="playAudio('10')">🔊</span>
+      </div>
       <div class="bg-text">През тези шест години се научих да се концентрирам и да не се отказвам лесно, когато греша. С много труд спечелих отборна купа и индивидуален сребърен медал на международно състезание!</div>
     </div>
 
@@ -267,7 +450,8 @@
       // Word-level ruby: put spaces in data-hz to mark word boundaries,
       // and put matching word-level pinyin in data-py (separated by spaces).
       const hzRaw = (el.getAttribute('data-hz') || '').trim();
-      const hzTokens = hzRaw.split(/\s+/).filter(Boolean);
+      // Keep spaces as separate tokens so they are preserved in output
+      const hzTokens = hzRaw.split(/(\s+)/).filter((t) => t.length > 0);
 
       const pyRaw = (el.getAttribute('data-py') || '').trim();
       const pyTokens = pyRaw ? pyRaw.split(/\s+/).filter(Boolean) : [];
@@ -290,6 +474,10 @@
 
       let html = '';
       for (const token of hzTokens) {
+        if (/^\s+$/.test(token)) {
+          html += token;
+          continue;
+        }
         if (hasCjk(token)) {
           const pyLower = (pyTokens[i] || '').toLowerCase();
           const shouldCap = (i === 0 && pyLower) || properPinyin.has(pyLower);
