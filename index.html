@@ -98,6 +98,10 @@
       border-radius: 12px;
       overflow: hidden;
     }
+
+    /* Mobile: allow horizontal scroll for the vocabulary table */
+    .vocab-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .vocab-table-wrap table { min-width: 720px; }
     .vocab-title {
       background-color: #d32f2f;
       color: white;
@@ -221,6 +225,7 @@
 
     <div class="vocab-container">
       <div class="vocab-title">重点词汇 (Vocabulary)</div>
+      <div class="vocab-table-wrap">
       <table>
         <thead>
           <tr>
@@ -251,6 +256,7 @@
           <tr><td><span class="v-word">金钥匙 <span class="play-icon" onclick="playAudio('v18')">🔊</span></span></td><td><span class="v-pinyin">jīnyàoshi</span></td><td>golden key</td><td>Златен ключ</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
 
     <div class="footer">Audio IDs: 01–21 (speech), v01–v18 (vocab).</div>
